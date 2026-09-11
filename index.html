@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#f4f8f8">
+  <meta name="description" content="تمرین‌های تنفسی هدایت‌شده در اپ امید؛ قابل شخصی‌سازی و مناسب تمرین روزانه.">
+  <title>تمرین تنفسی | امید</title>
+  <link rel="preload" as="audio" href="assets/audio/inhale.wav">
+  <link rel="preload" as="audio" href="assets/audio/exhale.wav">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">امید</p>
+        <h1>تمرین تنفسی</h1>
+      </div>
+      <button id="settingsButton" class="icon-button" type="button" aria-label="تنظیمات" title="تنظیمات">⚙</button>
+    </header>
+
+    <section id="selectionView" class="view" aria-labelledby="selectionTitle">
+      <div class="hero-card">
+        <div class="hero-copy">
+          <span class="hero-badge">تنفس هدایت‌شده</span>
+          <h2 id="selectionTitle">الان به چه چیزی نیاز دارید؟</h2>
+          <p>هدف تمرین را انتخاب کنید یا الگوی تنفس دلخواه خودتان را بسازید.</p>
+        </div>
+        <div class="hero-orb" aria-hidden="true"><span></span></div>
+      </div>
+
+      <div id="goalList" class="goal-list" role="list" aria-label="هدف تمرین"></div>
+
+      <div class="section-heading">
+        <div>
+          <p class="eyebrow">پیشنهاد امید</p>
+          <h2 id="exerciseHeading">آرام‌تر شدن</h2>
+        </div>
+        <div class="section-actions">
+          <button id="customBuilderButton" class="icon-text-button builder-button" type="button"><span aria-hidden="true">＋</span> ساخت تمرین</button>
+          <button id="showAllExercisesButton" class="icon-text-button" type="button"><span aria-hidden="true">≡</span> همه</button>
+        </div>
+      </div>
+
+      <div id="exerciseList" class="exercise-list" aria-live="polite"></div>
+      <div id="customExerciseList" class="custom-exercise-list" aria-label="تمرین‌های ساخته‌شده توسط شما"></div>
+    </section>
+
+    <section id="setupView" class="view" aria-labelledby="setupTitle" hidden>
+      <div class="setup-header">
+        <button id="setupBackButton" class="text-button" type="button">بازگشت</button>
+        <div>
+          <p class="eyebrow">آماده‌سازی</p>
+          <h2 id="setupTitle">تنظیم تمرین</h2>
+        </div>
+        <span class="header-spacer" aria-hidden="true"></span>
+      </div>
+
+      <article class="selected-exercise-card">
+        <div id="setupExerciseIcon" class="selected-icon" aria-hidden="true">◌</div>
+        <div>
+          <h3 id="setupExerciseTitle">تنفس آرام</h3>
+          <p id="setupExerciseDescription">تمرین تنفسی</p>
+          <strong id="setupExercisePattern" class="exercise-pattern">دم ۴ · بازدم ۶ ثانیه</strong>
+        </div>
+      </article>
+
+      <section class="setup-section" aria-labelledby="durationTitle">
+        <div class="setup-section-head">
+          <h3 id="durationTitle">مدت تمرین</h3>
+          <span id="durationPreview" class="duration-preview">۳ دقیقه</span>
+        </div>
+        <div id="durationList" class="duration-list" role="radiogroup" aria-label="مدت تمرین"></div>
+      </section>
+
+      <div class="safety-card">
+        <span class="safety-icon" aria-hidden="true">i</span>
+        <p id="setupSafetyText">هدف تمرین، تنفس راحت و بدون فشار است. اگر احساس ناخوشایند، سرگیجه یا تنگی نفس غیرعادی داشتید، تمرین را متوقف کنید و به تنفس طبیعی برگردید.</p>
+      </div>
+
+      <button id="startConfiguredButton" class="primary-button primary-large" type="button">شروع تمرین</button>
+    </section>
+
+    <section id="practiceView" class="view practice-view" aria-labelledby="practiceTitle" tabindex="-1" hidden>
+      <div class="practice-topbar">
+        <button id="backButton" class="text-button" type="button">خروج</button>
+        <div class="practice-meta">
+          <span id="practiceTitle">تمرین تنفسی</span>
+          <span id="practiceDurationLabel">۳ دقیقه</span>
+        </div>
+        <button id="soundButton" class="icon-button practice-tool-button" type="button" aria-pressed="true" aria-label="خاموش کردن صدای راهنما" title="صدای راهنما">🔊</button>
+      </div>
+
+      <div class="practice-progress-wrap">
+        <div class="progress-row">
+          <span id="cycleLabel">چرخه ۱</span>
+          <span id="timeLabel">۰:۰۰</span>
+        </div>
+        <div class="progress-track" aria-hidden="true"><div id="progressBar" class="progress-bar"></div></div>
+      </div>
+
+      <div class="breathing-stage" aria-label="نمایش بصری ریتم تنفس">
+        <div id="breathingOrb" class="breathing-orb" aria-hidden="true">
+          <div class="breathing-orb-glow"></div>
+          <div class="breathing-orb-ring ring-1"></div>
+          <div class="breathing-orb-ring ring-2"></div>
+          <div class="breathing-orb-core"></div>
+        </div>
+        <div class="phase-readout" aria-live="assertive" aria-atomic="true">
+          <div id="phaseLabel" class="phase-label">آماده</div>
+          <div id="countdownLabel" class="countdown-label">—</div>
+        </div>
+      </div>
+
+      <div class="practice-guidance">
+        <p id="instructionLabel" class="instruction-label">با ریتم آرام تمرین همراه شوید.</p>
+        <p id="safetyLiveLabel" class="safety-live-label"></p>
+      </div>
+
+      <div class="practice-controls">
+        <button id="mainActionButton" class="primary-button" type="button">مکث</button>
+        <button id="restartButton" class="secondary-button" type="button" hidden>شروع دوباره</button>
+      </div>
+    </section>
+
+    <section id="completionView" class="view completion-view" aria-labelledby="completionTitle" hidden>
+      <div class="completion-mark" aria-hidden="true">✓</div>
+      <p class="eyebrow">تمام شد</p>
+      <h2 id="completionTitle">تمرین را به پایان رساندید</h2>
+      <p id="completionSummary" class="completion-summary"></p>
+      <div class="completion-stat-grid" aria-label="خلاصه تمرین">
+        <div class="completion-stat"><span id="completionDuration">۳ دقیقه</span><small>مدت تمرین</small></div>
+        <div class="completion-stat"><span id="completionCycles">۰</span><small>چرخه کامل</small></div>
+      </div>
+      <div class="completion-actions">
+        <button id="repeatButton" class="primary-button" type="button">تکرار تمرین</button>
+        <button id="chooseAnotherButton" class="secondary-button" type="button">انتخاب تمرین دیگر</button>
+      </div>
+    </section>
+  </main>
+
+  <div id="settingsPanel" class="settings-panel" hidden>
+    <div class="settings-backdrop" data-close-settings></div>
+    <aside id="settingsSheet" class="settings-sheet" role="dialog" aria-modal="true" aria-labelledby="settingsTitle" tabindex="-1">
+      <div class="settings-header"><h2 id="settingsTitle">تنظیمات</h2><button id="closeSettingsButton" class="icon-button" type="button" aria-label="بستن تنظیمات">×</button></div>
+      <label class="setting-row"><span><strong>راهنمای صوتی فارسی</strong><small>نام مرحله با صدای مرورگر خوانده شود.</small></span><input id="voiceGuidanceToggle" type="checkbox" checked></label>
+      <label class="setting-row"><span><strong>صدای تنفس</strong><small>برای شروع دم، مکث و بازدم cue نرم پخش شود.</small></span><input id="phaseSoundToggle" type="checkbox" checked></label>
+      <label class="setting-row"><span><strong>صدای پس‌زمینه</strong><small>یک صدای بسیار آرام برای همراهی تمرین پخش شود.</small></span><input id="ambientSoundToggle" type="checkbox"></label>
+      <div class="setting-row setting-row-column"><span><strong>بلندی صدا</strong><small id="volumeValue">۴۰٪</small></span><input id="volumeRange" class="range-control" type="range" min="0" max="100" value="40" aria-label="بلندی صدا"></div>
+      <label class="setting-row"><span><strong>ویبره</strong><small>برای شروع هر مرحله بازخورد لمسی بدهد.</small></span><input id="vibrationToggle" type="checkbox" checked></label>
+      <label class="setting-row"><span><strong>حرکت کمتر</strong><small>برای حساسیت به حرکت، انیمیشن کاهش یابد.</small></span><input id="reducedMotionToggle" type="checkbox"></label>
+      <label class="setting-row setting-row-column"><span><strong>تمرین پیش‌فرض</strong><small>تمرینی که به‌عنوان گزینه پیش‌فرض در نظر گرفته شود.</small></span><select id="defaultExerciseSelect" aria-label="تمرین پیش‌فرض"></select></label>
+    </aside>
+  </div>
+
+  <div id="builderPanel" class="modal-panel" hidden>
+    <div class="modal-backdrop" data-close-builder></div>
+    <section id="builderSheet" class="builder-sheet" role="dialog" aria-modal="true" aria-labelledby="builderTitle" tabindex="-1">
+      <div class="modal-header"><div><p class="eyebrow">شخصی‌سازی</p><h2 id="builderTitle">تمرین خودم را می‌سازم</h2></div><button id="closeBuilderButton" class="icon-button" type="button" aria-label="بستن">×</button></div>
+      <p class="builder-intro">یک الگوی ساده بسازید و برای استفاده‌های بعدی ذخیره‌اش کنید.</p>
+
+      <label class="field"><span>نام تمرین</span><input id="customTitleInput" type="text" maxlength="42" placeholder="مثلاً تنفس قبل از خواب"></label>
+
+      <div class="pattern-editor" aria-label="تنظیم زمان هر مرحله">
+        <label class="pattern-field"><span>دم</span><input id="customInhaleInput" type="number" min="1" max="30" step="1" value="4"><small>ثانیه</small></label>
+        <label class="pattern-field"><span>مکث</span><input id="customHoldInput" type="number" min="0" max="30" step="1" value="0"><small>ثانیه</small></label>
+        <label class="pattern-field"><span>بازدم</span><input id="customExhaleInput" type="number" min="1" max="30" step="1" value="6"><small>ثانیه</small></label>
+      </div>
+
+      <div class="pattern-preview-card"><span>الگوی شما</span><strong id="customPatternPreview">دم ۴ · بازدم ۶</strong><small id="customCyclePreview">هر چرخه: ۱۰ ثانیه</small></div>
+
+      <div class="setup-section compact-section"><div class="setup-section-head"><h3>مدت تمرین</h3><span id="customDurationPreview" class="duration-preview">۳ دقیقه</span></div><div id="customDurationList" class="duration-list" role="radiogroup" aria-label="مدت تمرین سفارشی"></div></div>
+
+      <p id="builderError" class="form-error" role="alert" hidden></p>
+      <div class="builder-actions"><button id="cancelBuilderButton" class="secondary-button" type="button">انصراف</button><button id="saveCustomButton" class="primary-button" type="button">ذخیره تمرین</button></div>
+    </section>
+  </div>
+
+  <div id="srStatus" class="sr-only" aria-live="polite"></div>
+
+  <script src="exercises.js"></script>
+  <script src="audio.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
